@@ -6,7 +6,8 @@ const {
   detectVirtualEnv,
   sanitizeConfig,
   detectPipEnv,
-  replacePipEnvPathVar
+  replacePipEnvPathVar,
+  getPythonPath
 } = require("../lib/utils");
 
 const venvFixturesDir = path.join(__dirname, "fixtures", "venv");
@@ -131,6 +132,24 @@ describe("replacePipEnvPathVar", () => {
         "/home/tvallois/.local/share/virtualenvs/unix-XZE001N_"
       )
     ).toEqual("python");
+  });
+});
+
+describe("getPythonPath", () => {
+  it("returns a unix path to python in a virtualenv", () => {
+    expect(
+      getPythonPath(
+        "/home/tvallois/.local/share/virtualenvs/unix-XZE001N_"
+      )
+    ).toEqual(
+      "/home/tvallois/.local/share/virtualenvs/unix-XZE001N_/bin/python"
+    );
+  });
+
+  it("returns the configured python path without a virtualenv", () => {
+    expect(
+      getPythonPath(null)
+    ).toEqual( atom.config.get("ide-python.python") );
   });
 });
 
